@@ -8,6 +8,8 @@ export interface userDocument extends Document {
     avatar?: string | null,
     createdAt: Date,
     updatedAt: Date,
+
+    comparePassword(password: string): Promise<boolean>
 }
 
 const userSchema = new mongoose.Schema<userDocument>(
@@ -47,14 +49,15 @@ const userSchema = new mongoose.Schema<userDocument>(
     }
 )
 
-userSchema.pre<userDocument>("save", async function () {
+userSchema.pre("save", async function (next) {
     if(this.password && this.isModified("password")){
-        this.password = await hashPassword(this.password, 10)
+        this.password = await hashPassword(this.password)
     }
+    // next()
 })
 
 userSchema.methods.comparePassword = async function (password: string) {
-    return await comparePassword(password, this.hashPassword)
+    return await comparePassword(password, this.password)
 }
 
 export const User = mongoose.model<userDocument>("User", userSchema)
