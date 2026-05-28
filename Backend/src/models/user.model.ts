@@ -49,11 +49,10 @@ const userSchema = new mongoose.Schema<userDocument>(
     }
 )
 
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
     if(this.password && this.isModified("password")){
         this.password = await hashPassword(this.password)
     }
-    // next()
 })
 
 userSchema.methods.comparePassword = async function (password: string) {

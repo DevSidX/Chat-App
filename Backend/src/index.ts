@@ -37,8 +37,12 @@ app.get("/health", AsyncHandler (async (req: Request, res: Response) => {
 // Routes
 
 import authRouter from "./routes/auth.route"
+import chatRouter from "./routes/chat.route"
+import userRouter from "./routes/user.routes"
 
 app.use(`/api/auth`, authRouter)
+app.use(`/api/chat`, chatRouter)
+app.use(`/api/user`, userRouter)
 
 
 app.use(errorHandler)
