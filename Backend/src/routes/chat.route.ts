@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { createChat, getSingleChat, getUserChats } from "../controllers/chat.controller";
 import { passportAuthenticateJwt } from "../middlewares/passport.middleware";
+import { sendMessage } from "../controllers/message.controller";
 
 const router = Router()
 
@@ -8,6 +9,10 @@ router.use(passportAuthenticateJwt)
 
 router.route("/create").post(
     createChat
+)
+
+router.route("/message/send").post(
+    sendMessage
 )
 
 router.route("/all").get(
