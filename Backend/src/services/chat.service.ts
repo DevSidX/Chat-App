@@ -1,7 +1,8 @@
+import { emitNewChatToParticipants } from "../lib/socket";
 import { Chat } from "../models/chat.model";
 import { Message } from "../models/message.model";
 import { User } from "../models/user.model";
-import { NotFoundException } from "../utils/AppError";
+import { BadRequestException, NotFoundException } from "../utils/AppError";
 
 const createChatService = async(userId: string, body: {
     participantId?: string,
@@ -59,6 +60,13 @@ const createChatService = async(userId: string, body: {
 
     // Implement web socket 
 
+    const populateChat = await chat?.populate("participants", "name avatar")
+    const participantIdString = populateChat?.participants?.map((participant) => { 
+        return participant._id?.toString()
+    }) 
+
+    emitNewChatToParticipants(participantIdString , populateChat) // emit the new chat to all the participants of the chat
+
     return chat
 }
 
@@ -111,4 +119,17 @@ const getSingleChatService = async( chatId: string, userId: string) => {
     }
 }
 
-export { createChatService, getUserChatsService, getSingleChatService }
+const validateChatParticipants = async (chatId: string, userId: string) => {
+    const chat = await Chat.findOne({
+        _id: chatId,
+        participants: {
+            $in: [userId]
+        }
+    })
+
+    if (!chat) {
+        throw new BadRequestException("User not a participant in the chat")
+    }
+    return chat;
+}
+export { createChatService, getUserChatsService, getSingleChatService, validateChatParticipants }

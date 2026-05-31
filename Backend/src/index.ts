@@ -3,6 +3,7 @@ dotenv.config();
 import express, { Request, Response, NextFunction } from "express"
 import cookieParser from "cookie-parser"
 import cors from "cors"
+import http from 'http'
 import passport from "passport";
 
 import { Env } from "./config/env.config";
@@ -11,8 +12,14 @@ import { httpStatus } from "./config/http.config";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
 import connectDB from "./db/database";
 import { passportAuthenticateJwt } from "./middlewares/passport.middleware";
+import { initializeSocket } from "./lib/socket";
 
 const app = express()
+const server = http.createServer(app)
+
+// socket
+
+initializeSocket(server)
 
 app.use(express.json({ limit: "10mb" }))
 app.use(express.urlencoded({ extended: true }))
@@ -47,7 +54,7 @@ app.use(`/api/user`, userRouter)
 
 app.use(errorHandler)
 
-app.listen(Env.PORT, async () => {
+server.listen(Env.PORT, async () => {
     await connectDB()
     console.log(`Server is running on port ${Env.PORT} in ${Env.NODE_ENV} mode`);
 })

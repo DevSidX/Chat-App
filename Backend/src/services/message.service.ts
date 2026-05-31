@@ -1,7 +1,9 @@
+import mongoose from "mongoose"
 import { cloudinary } from "../config/cloudinary.config"
 import { Chat } from "../models/chat.model"
 import { Message } from "../models/message.model"
 import { BadRequestException, NotFoundException } from "../utils/AppError"
+import { emitLastMessageToParticipants, emitNewMessageToChatRoom } from "../lib/socket"
 
 
 const sendMessageService = async (
@@ -68,15 +70,26 @@ const sendMessageService = async (
             path: "replyTo",
             select: "content image sender",
             populate: {
-            path: "sender",
-            select: "name avatar"
+                path: "sender",
+                select: "name avatar"
             },
         },
     ])
 
-        // webSocket
+    chat.lastMessage = newMsg._id as mongoose.Types.ObjectId
 
-     return {
+    await chat.save() // with the updated lastMessage field
+
+    // websocket emit the new message to the chat members
+
+    emitNewMessageToChatRoom(userId, chatId, newMsg)
+
+    // webSocket emit the last message to the chat members (personal room user)
+    
+    const allParticipantsIds = chat.participants.map(participant => participant.toString()) // get all the participant ids of the chat as strings
+    emitLastMessageToParticipants(allParticipantsIds, chatId, newMsg) 
+
+    return {
         msg: newMsg,
         chatId
     }
