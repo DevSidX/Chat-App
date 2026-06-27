@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import logoSvg from "../../assets/chat_logo.svg"
+import logoSvg from "../../assets/TalkioLogo.svg"
 import { cn } from "@/lib/utils"
 
 interface LogoProps {
