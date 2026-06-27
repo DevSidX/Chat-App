@@ -4,7 +4,7 @@ export interface chatDocument extends Document {
     participants: mongoose.Types.ObjectId[]
     lastMessage: mongoose.Types.ObjectId
     isGroup: boolean
-    groupname: string
+    groupName: string
     createdBy: mongoose.Types.ObjectId
     createdAt: Date
     updatedAttedAt: Date
@@ -28,7 +28,7 @@ const chatSchema = new mongoose.Schema<chatDocument>(
             type: Boolean,
             default: false
         },
-        groupname: {
+        groupName: {
             type: String
         },
         createdBy: {

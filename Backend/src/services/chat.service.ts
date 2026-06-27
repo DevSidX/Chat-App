@@ -8,7 +8,7 @@ const createChatService = async(userId: string, body: {
     participantId?: string,
     isGroup?: boolean,
     participants?: string[],
-    groupname?: string
+    groupName?: string
 }) => {
     // what we gonna do is
     // check if the chat is group or not
@@ -16,18 +16,18 @@ const createChatService = async(userId: string, body: {
     // if not group then check if the chat already exists between the two users
     // if exists then return the existing chat
     // if not exists then create a new chat between the two users
-    const { participantId, isGroup, participants, groupname } = body
+    const { participantId, isGroup, participants, groupName } = body
 
     let chat;
     let allParticipantsId: string[] = []
 
-    if (isGroup && participants?.length && groupname) {
+    if (isGroup && participants?.length && groupName) {
         allParticipantsId = [userId, ...participants]
 
         chat = await Chat.create({ // creating chat
             participants: allParticipantsId,
             isGroup: true,
-            groupname,
+            groupName,
             createdBy: userId 
         })
     } else if (participantId) {
