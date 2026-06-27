@@ -1,0 +1,36 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="512" y2="512">
+      <stop offset="0%" stop-color="#B26BFF"/>
+      <stop offset="100%" stop-color="#5B21B6"/>
+    </linearGradient>
+
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-opacity="0.25"/>
+    </filter>
+
+    <linearGradient id="bubble" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#EDE9FE"/>
+    </linearGradient>
+
+    <linearGradient id="t" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A855F7"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="90" fill="url(#bg)"/>
+
+  <g filter="url(#shadow)">
+    <path
+      d="M256 120C167 120 96 184 96 264C96 344 167 408 256 408C280 408 303 403 324 394L384 416L364 360C395 333 416 301 416 264C416 184 345 120 256 120Z"
+      fill="url(#bubble)"
+    />
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="180" y="180" width="152" height="36" rx="18" fill="url(#t)"/>
+    <rect x="238" y="180" width="36" height="140" rx="18" fill="url(#t)"/>
+  </g>
+</svg>
