@@ -1,8 +1,10 @@
-import React from 'react'
+import EmptyState from '@/components/emptyState'
 
 const Chat = () => {
   return (
-    <div>Chat</div>
+    <div className='hidden lg:block h-svh'>
+      <EmptyState />
+    </div>
   )
 }
 
