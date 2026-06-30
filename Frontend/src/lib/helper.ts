@@ -13,14 +13,14 @@ export const isUserOnline = (userId?: string) => {
     return onlineUsers.includes(userId)
 }
 
-
+// a helper that turns a chat object into the information needed to display that chat in the UI.
 export const getOtherUserAndGroup = (chat: chatType, currUserId: string | null) => {
     const isGroup = chat?.isGroup
 
-    if (isGroup) {
+    if (isGroup) {  // if the chat is group
         return {
             name: chat.groupName || 'Unnamed Group',
-            subHeading: `{chat.participants.length} member's `,
+            subHeading: `${chat.participants.length} member's `,
             avatar: "",
             isGroup
         }

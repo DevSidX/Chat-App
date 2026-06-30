@@ -12,7 +12,7 @@ interface LogoProps {
 const Logo = ({
     url = "/",
     showText = true,
-    imgClass = "size-[30px]",
+    imgClass = "size-[50px]",
     textClass
 }: LogoProps) => {
     return (

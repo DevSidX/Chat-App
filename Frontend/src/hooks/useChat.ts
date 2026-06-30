@@ -1,5 +1,5 @@
 import type { UserType } from "@/@Types/auth.type";
-import type { chatType, createChatType, MessageType } from "@/@Types/chat.type";
+import type { chatType, createChatType, MessageType, createMessageType } from "@/@Types/chat.type";
 import { API } from "@/lib/axiosClient";
 import { toast } from "sonner";
 import { create } from "zustand";
@@ -9,7 +9,7 @@ interface chatState {
     users: UserType[]
     singleChat: {
         chat: chatType,
-        message: MessageType
+        message: MessageType[]
     } | null
 
     isChatLoading: boolean
@@ -26,6 +26,8 @@ interface chatState {
     addNewChat: (newChat: chatType) => void
 
     updateChatLastMessage: (chatId: string, lastMessage: MessageType) => void
+
+    addNewMessage: (chatId: string, message: MessageType) => void
 }
 
 const useChat = create<chatState>()(
@@ -84,12 +86,12 @@ const useChat = create<chatState>()(
             }
         },
 
-        fetchSingleChat: async () => {
+        fetchSingleChat: async (chatId: string) => {
             set({ isSingleChatLoading: true })
 
             try {
-                const { data } = await API.get('/chat/single');
-                set({ chats: data.chats })
+                const { data } = await API.get(`/chat/${chatId}`);
+               set({ singleChat: { chat: data.chat, message: data.messages } })
             } catch (error: any) {
                 toast.error(error?.response?.data?.message || "Failed to fetch chat")
             } finally {
@@ -139,6 +141,19 @@ const useChat = create<chatState>()(
                     ]
                 }
             })
+        },
+
+        addNewMessage: (chatId, message) => {
+            const chat = get().singleChat
+
+            if (chat?.chat._id === chatId) {
+                set({ 
+                    singleChat: {
+                        chat: chat.chat,
+                        message: [...chat.message, message] 
+                    }
+                })
+            }
         }
 
     })

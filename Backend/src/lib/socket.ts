@@ -98,7 +98,7 @@ const initializeSocket = (httpServer: HTTPServer) => {
         socket.on("chat: leave", (chatId: string) => {
             if(!chatId){
                 socket.leave(`chat: ${chatId}`) // leave the chat room with the given chat ID
-                console.log(`User ${userId} left chat ${chatId}`)
+                console.log(`User ${userId} join room chat ${chatId}`)
             }
         })
 

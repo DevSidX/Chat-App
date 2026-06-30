@@ -2,13 +2,13 @@ import { useChat } from "@/hooks/useChat"
 import { useEffect, useState } from "react"
 import { Spinner } from "../ui/spinner"
 import ChatListItem from "./ChatListItem"
-import { data, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import useAuth from "@/hooks/useAuth"
 import ChatListHeader from "./ChatListHeader"
 import type { chatType, MessageType } from "@/@Types/chat.type"
 import { useSocket } from "@/hooks/useSocket"
 
-const chatList = () => {
+const ChatList = () => {
 
     const navigate = useNavigate()
 
@@ -31,8 +31,9 @@ const chatList = () => {
     )) || []
 
     useEffect(() => { // run the fetch method as soon as the component loads on the screen
+        if(!user) return
         fetchChats()
-    }, [fetchChats])
+    }, [fetchChats, user])
 
     useEffect(() => {
         if (!socket) {
@@ -115,4 +116,4 @@ const chatList = () => {
     )
 }
 
-export default chatList
+export default ChatList
