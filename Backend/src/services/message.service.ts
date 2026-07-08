@@ -23,6 +23,8 @@ const sendMessageService = async (
     // After creating the message update the lastMessage field of the chat with the content of the new message and the timestamp of
     const { chatId, content, image, replyToId } = body
 
+    console.log("replyToId:", replyToId);
+
     const chat = await Chat.findOne({
         _id: chatId,
         participants: {

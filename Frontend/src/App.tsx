@@ -17,13 +17,13 @@ function App() {
   const isAuth = isAuthRoute(pathname) // check if the current route is an auth route (sign in or sign up)
 
   const { onlineUsers } = useSocket() // get the list of online users from the socket context
-  console.log(onlineUsers, "online users" )
-  
-  useEffect(() => {
-    isAuthStatus()  
-  },[isAuthStatus]) // check the authentication status of the user when the app loads
+  console.log(onlineUsers, "online users")
 
-  if(isAuthStatusLoading && !user && !isAuth) {
+  useEffect(() => {
+    isAuthStatus()
+  }, [isAuthStatus]) // check the authentication status of the user when the app loads
+
+  if (isAuthStatusLoading && !user && !isAuth) {
     return (
       <div className="flex flex-col items-center justify-center h-screen ">
         <Logo imgClass='size-20' showText={false} />

@@ -102,7 +102,7 @@ const getSingleChatService = async( chatId: string, userId: string) => {
 
     const messages = await Message.find({ // find all the messages of this chat and populate the sender details (name and avatar) 
         chatId 
-    }).populate("participants", "name avatar")
+    }).populate("sender", "name avatar")
     .populate({
         path: "replyTo",
         select: "content image sender",

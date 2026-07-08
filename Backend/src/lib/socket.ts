@@ -135,8 +135,12 @@ const emitNewChatToParticipants = (participantIds: string[] = [], chat: any) => 
 
 const emitNewMessageToChatRoom = (senderId: string, chatId: string, message: any) => {
     const io = getIo()
-    const senderSocketId = onlineUsers.get(senderId)
+    const senderSocketId = onlineUsers.get(senderId?.toString())
     
+    console.log(senderId, "Sender Id")
+    console.log(senderSocketId, "senderSocketId")
+    console.log("All online users: ", Object.fromEntries(onlineUsers)) // 
+
     if(senderSocketId){
         io.to(`chat: ${chatId}`)
         .except(senderSocketId)

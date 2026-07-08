@@ -17,7 +17,7 @@ export type MessageType = {
     image: string | null
     sender: UserType | null
     replyTo: MessageType | null
-    charId: string 
+    chatId: string 
     createdAt: string
     updatedAt: string
     // only frontend
@@ -32,8 +32,8 @@ export type createChatType = {
 }
 
 export type createMessageType = {
-    chatId: string
+    chatId: string | null
     content?: string
     image?: string
-    replyTo?: MessageType | null
+    replyToId?: MessageType | null
 }

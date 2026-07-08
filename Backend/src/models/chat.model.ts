@@ -7,7 +7,7 @@ export interface chatDocument extends Document {
     groupName: string
     createdBy: mongoose.Types.ObjectId
     createdAt: Date
-    updatedAttedAt: Date
+    updatedAt: Date
 }
 
 const chatSchema = new mongoose.Schema<chatDocument>(
