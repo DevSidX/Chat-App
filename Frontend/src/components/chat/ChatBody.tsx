@@ -1,7 +1,7 @@
 import type { MessageType } from "@/@Types/chat.type"
 import { useChat } from "@/hooks/useChat"
 import { useSocket } from "@/hooks/useSocket"
-import { useEffect, useRef } from "react"
+import { useEffect, useLayoutEffect, useRef } from "react"
 import ChatMessageBody from "./ChatMessageBody"
 
 
@@ -9,9 +9,10 @@ interface Props {
   chatId: string | null
   messages: MessageType[]
   onReply: (message: MessageType) => void
+  replyTo: MessageType | null
 }
 
-const ChatBody = ({ chatId, messages, onReply }: Props) => {
+const ChatBody = ({ chatId, messages, onReply, replyTo }: Props) => {
   const { socket } = useSocket()
   const { addNewMessage } = useChat()
   const bottomRef = useRef<HTMLDivElement | null>(null)
@@ -31,15 +32,18 @@ const ChatBody = ({ chatId, messages, onReply }: Props) => {
     return () => {
       socket.off("message: new", handleNewMessage)
     }
-  }, [socket, addNewMessage])
+  }, [socket, addNewMessage, chatId])
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages])
+  useLayoutEffect(() => {
+    bottomRef.current?.scrollIntoView({
+      behavior: "instant",
+      block: "end",
+    });
+  }, [messages, replyTo]);
 
   return (
     <div className="w-full max-w-6xl mx-auto h-full flex flex-col px-3 pt-36">
-      {messages?.map((message) => (
+      {messages.filter((message): message is MessageType => Boolean(message?._id)).map((message) => (
         <ChatMessageBody
           key={message._id}
           message={message}

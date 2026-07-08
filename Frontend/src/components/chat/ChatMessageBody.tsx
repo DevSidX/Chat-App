@@ -17,7 +17,7 @@ const ChatMessageBody = memo(({ message, onReply }: Props) => {
   const { user } = useAuth()
   const userId = user?._id || null
   const isCurrentUser = message.sender?._id === userId
-  const senderName = isCurrentUser ? "You" : message.sender?._id
+  const senderName = isCurrentUser ? "You" : message.sender?.name
 
   const replySenderName = message.replyTo?.sender?._id === userId ? "you" : message.replyTo?.sender?.name
 
@@ -67,12 +67,14 @@ const ChatMessageBody = memo(({ message, onReply }: Props) => {
             {/* {ReplyToBox} */}
             {message.replyTo && (
               <div className={replyBoxClass}>
-                <h5 className="font-medium">
-                  {replySenderName}
-                </h5>
-                <p className="font-normal text-muted-foreground">
-                  {message?.replyTo.content || message?.replyTo.image ? "📸 Photo" : ""}
-                </p>
+                <h5 className="font-medium">{replySenderName}</h5>
+                {message.replyTo.content ? (
+                  <p className="font-normal text-muted-foreground truncate">
+                    {message.replyTo.content}
+                  </p>
+                ) : message.replyTo.image ? (
+                  <p className="font-normal text-muted-foreground">📸 Photo</p>
+                ) : null}
               </div>
             )}
 

@@ -9,8 +9,8 @@ import { useSocket } from './useSocket'
 
 interface AuthState {
     user: UserType | null,
-    isLoggedIn: boolean,
-    isSignUp: boolean,
+    isLoggingIn: boolean,
+    isSigningUp: boolean,
     isAuthStatusLoading: boolean,
     
     register: (data: RegisterType) => void,
@@ -23,12 +23,12 @@ const useAuth = create<AuthState>()(
     persist( // persist the auth state in localStorage so that it persists across page reloads
         (set) => ({ // initial state and actions
             user: null,
-            isSignUp: false,
-            isLoggedIn: false,
+            isSigningUp: false,
+            isLoggingIn: false,
             isAuthStatusLoading: false,
 
             register: async (data: RegisterType) => {
-                set({ isSignUp: true })
+                set({ isSigningUp: true })
 
                 try {
                     const response = await API.post('/auth/register', data)
@@ -42,19 +42,19 @@ const useAuth = create<AuthState>()(
                 } catch (error: any) {
                     toast.error(error.response?.data?.message || "Registration failed")
                 } finally {
-                    set({ isSignUp: false })
+                    set({ isSigningUp: false })
                 }
 
             },
 
             login: async (data: LoginType) => {
-                set({ isLoggedIn: true })
+                set({ isLoggingIn: true })
 
                 try {
                     const response = await API.post('/auth/login', data)
                     
                     set({
-                        user: response.data.loggedInUser, // user object returned from the server after successful login
+                        user: response.data.loginedUser, // user object returned from the server after successful login
                     })
 
                     useSocket.getState().connectSocket() // connect to socket after successful login
@@ -62,7 +62,7 @@ const useAuth = create<AuthState>()(
                 } catch (error: any) {
                     toast.error(error.response?.data?.message || "Login failed")
                 } finally {
-                    set({ isLoggedIn: false })
+                    set({ isLoggingIn: false })
                 }
 
             },
