@@ -161,10 +161,42 @@ const emitLastMessageToParticipants = (participantIds: string[], chatId: string,
     }
 }
 
+const emitChatAI = ({ chatId, chunk = null, sender, done = false, message } : {
+    chatId: string, 
+    chunk?: string | null, 
+    sender?: any, 
+    done?: false,
+    message?: any
+}) => {
+    const io = getIo()
+    if(chunk?.trim() && !done){
+        io.to(`chat: ${chatId}`).emit("chat: ai", {
+            chatId, 
+            chunk, 
+            sender, 
+            done, 
+            message: null
+        })
+    }
+
+    if(done){
+        io.to(`chat: ${chatId}`).emit("chat: ai", {
+            chatId, 
+            chunk: null, 
+            sender, 
+            done, 
+            message: null
+        })
+    }
+    return 
+    return 
+}
+
 export { 
     initializeSocket, 
     AuthenticatedSocket, 
     emitNewChatToParticipants, 
     emitNewMessageToChatRoom, 
-    emitLastMessageToParticipants 
+    emitLastMessageToParticipants,
+    emitChatAI
 }

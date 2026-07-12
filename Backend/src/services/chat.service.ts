@@ -44,7 +44,7 @@ const createChatService = async(userId: string, body: {
                 $all: allParticipantsId,
                 $size: 2
             }
-        }).populate("participants", "name avatar") // check if chat already exists between two users
+        }).populate("participants", "name avatar isAI") // check if chat already exists between two users
         // populate = fetching the details of participants (name and avatar) from User
 
         if(existingChat){
@@ -80,7 +80,7 @@ const getUserChatsService = async(userId: string) => {
         path: "lastMessage",
         populate: {
             path: "sender",
-            select: "name avatar",
+            select: "name avatar isAI",
         },
         }
     ).sort({ updatedAt: -1 })

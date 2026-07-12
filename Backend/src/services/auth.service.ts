@@ -12,7 +12,10 @@ const registerService = async (body: RegisterSchemaType) => {
     }
 
     const newUser = await User.create({
-        ...body
+        name: body.name,
+        email: body.email,
+        password: body.password,
+        avatar: body.avatar,
     })
 
     await newUser.save()
