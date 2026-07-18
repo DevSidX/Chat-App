@@ -23,11 +23,11 @@ const sendMessageService = async (
     }
 ) => {
     // Check if the chat exists and the user is a participant of the chat
-    // then create a new message in the chat
-    // If the message is a reply to another message then check if the message being replied to exists and belongs to the same chat
-    // If the message is a reply to another message and the message being replied to exists and belongs to the same chat then create a new message with the replyTo field set to the id of the message being replied to
-    // If the message is not a reply to another message then create a new message without the replyTo field
-    // After creating the message update the lastMessage field of the chat with the content of the new message and the timestamp of
+    // then create a new messages in the chat
+    // If the messages is a reply to another messages then check if the messages being replied to exists and belongs to the same chat
+    // If the messages is a reply to another messages and the messages being replied to exists and belongs to the same chat then create a new messages with the replyTo field set to the id of the messages being replied to
+    // If the messages is not a reply to another messages then create a new messages without the replyTo field
+    // After creating the messages update the lastMessage field of the chat with the content of the new messages and the timestamp of
     const { chatId, content, image, replyToId } = body
 
     console.log("replyToId:", replyToId);
@@ -50,7 +50,7 @@ const sendMessageService = async (
         })
 
         if(!replyMsg){
-            throw new NotFoundException("Reply message not found");
+            throw new NotFoundException("Reply messages not found");
         }
     }
 
@@ -89,10 +89,10 @@ const sendMessageService = async (
 
     await chat.save() // with the updated lastMessage field
 
-    // websocket emit the new message to the chat members
+    // websocket emit the new messages to the chat members
     emitNewMessageToChatRoom(userId, chatId, newMsg)
 
-    // webSocket emit the last message to the chat members (personal room user)
+    // webSocket emit the last messages to the chat members (personal room user)
     const allParticipantsIds = chat.participants.map(participant => participant.toString()) // get all the participant ids of the chat as strings
     emitLastMessageToParticipants(allParticipantsIds, chatId, newMsg) 
 
@@ -111,7 +111,7 @@ const sendMessageService = async (
         msg: newMsg,
         aiResponse,
         chat,
-        isAiChat: chat.isAiChat
+        // isAiChat: chat.isAiChat
     }
     
 }
@@ -119,7 +119,7 @@ const sendMessageService = async (
 // Function to get AI response for a chat and user. 
 async function getAIResponse(chatId: string, userId: string){
     const TalkAi = await User.findOne({
-        isAi: true
+        isAI: true
     })
 
     if(!TalkAi){
@@ -129,18 +129,18 @@ async function getAIResponse(chatId: string, userId: string){
     const chatHistory = await getChatHistory(chatId)
 
     // ModelMessage is the fundamental structure used to send prompts to an AI
-    const formattedMessages: ModelMessage[] = chatHistory.map(( message: any ) => {
-        const role = message.sender.isAI ? "assistant" : "user"
+    const formattedMessages: ModelMessage[] = chatHistory.map(( messages: any ) => {
+        const role = messages.sender.isAI ? "assistant" : "user"
         const parts: any[] = [];
 
-        if(message.image){
+        if(messages.image){
             parts.push({
                 type: "file",
-                data: message.image,
+                data: messages.image,
                 mediaType: "image/png",
                 filename: "image.png"
             })
-            if(!message.content){
+            if(!messages.content){
                 parts.push({
                     type: "text",
                     text: "Describe what you see in the image"
@@ -148,12 +148,12 @@ async function getAIResponse(chatId: string, userId: string){
             }
         }
 
-        if(message.content){
+        if(messages.content){
             parts.push({
                 type: "text",
-                text: message.replyTo ? 
-                    `Replying to: ${message.replyTo.content}\n${message.content}` :
-                     message.content
+                text: messages.replyTo ? 
+                    `Replying to: ${messages.replyTo.content}\n${messages.content}` :
+                     messages.content
             })
         }
         return {
@@ -163,11 +163,12 @@ async function getAIResponse(chatId: string, userId: string){
         }
     })
 
-    const result = streamText({ // await
-        model: google("gemini-2.5-flash"),
-        messages: formattedMessages,
-        system: "You are a helpful AI assistant so respond only with text and attend to the last user message only.",
-    })
+    try {
+        const result = await streamText({ // await
+            model: google("gemini-3.1-flash-lite"),
+            messages: formattedMessages,
+            system: "You are a helpful AI assistant so respond only with text and attend to the last user message only.",
+        })
 
     let fullResponse = "";
     for await(let chunk of result.textStream) {
@@ -182,7 +183,7 @@ async function getAIResponse(chatId: string, userId: string){
     }
 
     if(!fullResponse.trim()) {
-        return ""
+        return null
     }
 
     const aiMessage = await Message.create({
@@ -198,11 +199,17 @@ async function getAIResponse(chatId: string, userId: string){
         chatId,
         chunk: null,
         sender: TalkAi,
-        done: false,
+        done: true,
         message: aiMessage
     })
 
     emitLastMessageToParticipants([userId], chatId, aiMessage)
+
+    return aiMessage
+    } catch (error) {
+        console.log("AI generation failed", error);
+        return null
+    }
 }
 
 async function getChatHistory(chatId: string){

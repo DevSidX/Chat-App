@@ -16,6 +16,7 @@ type UserType = {
     name: string,
     email: string,
     avatar?: string | null,
+    isAI?: boolean
     createdAt: string,
     updatedAt: string,
 }

@@ -5,6 +5,7 @@ export type chatType = {
     lastMessage: MessageType
     participants: UserType[]
     isGroup: boolean
+    isAiChat?: boolean
     createdBy: string
     groupName: string
     createdAt: string 
@@ -22,6 +23,7 @@ export type MessageType = {
     updatedAt: string
     // only frontend
     status?: string
+    streaming?: boolean
 }
 
 export type createChatType = {
