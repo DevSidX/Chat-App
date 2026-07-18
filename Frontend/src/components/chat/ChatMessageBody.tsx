@@ -6,6 +6,9 @@ import { formatChatTime } from "@/lib/helper"
 import { Button } from "../ui/button"
 import { ReplaceIcon } from "lucide-react"
 import { memo } from "react"
+import { Response } from "../ui/aiResponse"
+import { RiCircleFill } from "@remixicon/react"
+
 
 interface Props {
   message: MessageType
@@ -40,6 +43,9 @@ const ChatMessageBody = memo(({ message, onReply }: Props) => {
       : "bg-gray-200 dark:bg-secondary border-l-[#CC4A31]"
   )
 
+  const content =
+    Array.isArray(message.content) ? message.content.join("") : message.content
+
   return (
     <div className={containerClass}>
       {!isCurrentUser && (
@@ -68,13 +74,11 @@ const ChatMessageBody = memo(({ message, onReply }: Props) => {
             {message.replyTo && (
               <div className={replyBoxClass}>
                 <h5 className="font-medium">{replySenderName}</h5>
-                {message.replyTo.content ? (
-                  <p className="font-normal text-muted-foreground truncate">
-                    {message.replyTo.content}
-                  </p>
-                ) : message.replyTo.image ? (
-                  <p className="font-normal text-muted-foreground">📸 Photo</p>
-                ) : null}
+                <p className="font-normal text-muted-foreground max-w-[250px] truncate">
+
+              {message?.replyTo?.content || (message?.replyTo?.image ? "📸 Photo" : "")}
+
+                </p>
               </div>
             )}
 
@@ -86,9 +90,14 @@ const ChatMessageBody = memo(({ message, onReply }: Props) => {
               />
             )}
 
-            {message.content && (
-              <p> {message.content} </p>
+            {content && <Response>{content}</Response>}
+
+            {message.streaming && (
+              <span>
+                <RiCircleFill className="w-4 h-4 animate-bounce rounded-full dark:text-white mt-1"></RiCircleFill>
+              </span>
             )}
+
           </div>
 
           {/* Reply Icon Button */}

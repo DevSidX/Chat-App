@@ -32,12 +32,16 @@ export const getOtherUserAndGroup = (chat: chatType, currUserId: string | null) 
 
     const isOnline = isUserOnline(other?._id ?? "") // if the user is online
 
+    const subHeading = other?.isAI ? "Assistant" : isOnline ? "Online" : "Offline"
+
+    console.log(subHeading, other, "subHeading and other")
     return {
         name: other?.name || "Unknown",
-        subHeading: isOnline ? "Online" : "Offline",
+        subHeading,
         avatar: other?.avatar || "",
         isGroup: false,
-        isOnline
+        isOnline,
+        isAI: other?.isAI || false
     }
 }
 

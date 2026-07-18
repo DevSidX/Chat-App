@@ -3,14 +3,15 @@ import connectDB from "../db/database"
 import { User } from "../models/user.model"
 
 const createAi = async () => {
-    let TalkAI = await User.findOne({ isAI: true })
 
-    if(TalkAI){
+    const existingChat = await User.findOne({ isAI: true })
+
+    if(existingChat){
         console.log("✅ TalkAI already exists")
-        return TalkAI
+        return existingChat
     }
 
-    TalkAI = await User.create({
+    const TalkAI = await User.create({
         name: "Talk Ai",
         isAI: true,
         avatar: "https://res.cloudinary.com/dwxqt9lpz/image/upload/v1783629990/talkio_ai_assistant_logo_p25crq.png"

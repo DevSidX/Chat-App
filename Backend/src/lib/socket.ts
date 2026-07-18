@@ -165,7 +165,7 @@ const emitChatAI = ({ chatId, chunk = null, sender, done = false, message } : {
     chatId: string, 
     chunk?: string | null, 
     sender?: any, 
-    done?: false,
+    done?: boolean,
     message?: any
 }) => {
     const io = getIo()
@@ -185,11 +185,10 @@ const emitChatAI = ({ chatId, chunk = null, sender, done = false, message } : {
             chunk: null, 
             sender, 
             done, 
-            message: null
+            message
         })
     }
-    return 
-    return 
+    return  
 }
 
 export { 

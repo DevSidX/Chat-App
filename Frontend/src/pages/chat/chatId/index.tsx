@@ -21,7 +21,8 @@ const SingleChat = () => {
 
   const currUserId = user?._id || null
   const chat = singleChat?.chat
-  const messages = singleChat?.message || []
+  const messages = singleChat?.messages || []
+  const isAIChat = chat?.isAiChat || false
 
   useEffect(() => { // fetch the sinle chat of a user on the right side
     if (!chatId) return;
@@ -77,6 +78,7 @@ const SingleChat = () => {
       <ChatFooter
         replyToId={replyto}
         chatId={chatId}
+        isAIChat={isAIChat}
         currUserId={currUserId}
         onCancelReply={() => setReplyTo(null)}
       />

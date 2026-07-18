@@ -15,16 +15,17 @@ interface Props {
   currUserId: string | null
   replyToId: MessageType | null
   onCancelReply: () => void
+  isAIChat: boolean
 }
 
-const ChatFooter = ({ chatId, currUserId, replyToId, onCancelReply }: Props) => {
+const ChatFooter = ({ chatId, currUserId, isAIChat, replyToId, onCancelReply }: Props) => {
 
   // shape of the data here it expects a message string
   const messageSchema = z.object({
     message: z.string().optional()
   })
 
-  const { sendMessage } = useChat()
+  const { sendMessage, isSendingMessage } = useChat() // isSendigMessage here is used to disable the send button when the message is being sent 
 
   const [image, setImage] = useState<string | null>(null)
   const imageImputRef = useRef<HTMLInputElement | null>(null)
@@ -61,18 +62,25 @@ const ChatFooter = ({ chatId, currUserId, replyToId, onCancelReply }: Props) => 
   }
 
   const onSubmit = (values: { message?: string }) => {
+    if (isSendingMessage) {
+      return
+    }
+
     if (!values.message?.trim() && !image) { //  if the value is not an image or an string
       toast.error("Please enter a message or select an image")
       return
     }
 
-    // send message
-    sendMessage({
+    const payload = {
       chatId,
       content: values.message,
       image: image || undefined,
       replyToId: replyToId
-    })
+    }
+
+    // send message
+    sendMessage(payload, isAIChat)
+
     onCancelReply()
     handleRemoveImage()
     form.reset()
@@ -91,7 +99,7 @@ const ChatFooter = ({ chatId, currUserId, replyToId, onCancelReply }: Props) => 
             />
           </div>
         )}
-        {image && (
+        {image && !isSendingMessage && (
           <div className="max-w-6xl max-auto px-8.5 mb-2">
             <div className="relative w-fit">
               <img
@@ -122,6 +130,7 @@ const ChatFooter = ({ chatId, currUserId, replyToId, onCancelReply }: Props) => 
                 type="button"
                 variant="outline"
                 size="icon"
+                disabled={isSendingMessage}
                 className="rounded-full"
                 onClick={() => imageImputRef.current?.click()}
               >
@@ -131,6 +140,7 @@ const ChatFooter = ({ chatId, currUserId, replyToId, onCancelReply }: Props) => 
                 type="file"
                 className="hidden"
                 accept="image/*"
+                disabled={isSendingMessage}
                 ref={imageImputRef}
                 onChange={handleImageChange}
               />
@@ -140,6 +150,7 @@ const ChatFooter = ({ chatId, currUserId, replyToId, onCancelReply }: Props) => 
             <FormField
               control={form.control}
               name="message"
+              disabled={isSendingMessage}
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <input
@@ -152,15 +163,27 @@ const ChatFooter = ({ chatId, currUserId, replyToId, onCancelReply }: Props) => 
               )}
             />
 
-            <Button type="submit" size="icon" className="rounded-lg">
+            <Button
+              type="submit"
+              size="icon"
+              className="rounded-lg"
+              disabled={isSendingMessage}
+            >
               <Send className="h-3.5 w-3.5" />
             </Button>
 
           </form>
         </Form>
-
+        
       </div>
 
+      {replyToId && !isSendingMessage && (
+        <ChatReplyBar
+          replyTo={replyToId}
+          currUserId={currUserId}
+          onCancel={onCancelReply}
+        />
+      )}
 
     </>
   )
