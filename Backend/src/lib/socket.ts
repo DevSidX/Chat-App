@@ -65,7 +65,7 @@ const initializeSocket = (httpServer: HTTPServer) => {
         const userId = socket.userId 
         const newSocketId = socket.id
 
-        console.log(`Socket connected`, { userId, newSocketId })
+        // console.log(`Socket connected`, { userId, newSocketId })
 
         //register socket for the user
         onlineUsers.set(userId, newSocketId)

@@ -46,6 +46,7 @@ app.get("/health", AsyncHandler (async (req: Request, res: Response) => {
 import authRouter from "./routes/auth.route"
 import chatRouter from "./routes/chat.route"
 import userRouter from "./routes/user.routes"
+import path from "path/win32";
 
 app.use(`/api/auth`, authRouter)
 app.use(`/api/chat`, chatRouter)
@@ -53,6 +54,18 @@ app.use(`/api/user`, userRouter)
 
 
 app.use(errorHandler)
+
+// purpose = serve the frontend build files in production
+if (Env.NODE_ENV === "production") {
+    const clientPath = path.resolve(__dirname, "../../Frontend/dist")
+
+    // serve the static file
+    app.use(express.static(clientPath))
+
+    app.get(/^(?!\/api)/, (req: Request, res: Response) => {
+        res.sendFile(path.join(clientPath, "index.html"))
+    })
+}
 
 server.listen(Env.PORT, async () => {
     await connectDB()
