@@ -1,6 +1,6 @@
 import type { MessageType } from "@/@Types/chat.type"
 import useAuth from "@/hooks/useAuth"
-import { cn } from "@/lib/utils"
+import { cn } from "../../lib/utils"
 import AvatarWithBatch from "../avatarWithBatch"
 import { formatChatTime } from "@/lib/helper"
 import { Button } from "../ui/button"

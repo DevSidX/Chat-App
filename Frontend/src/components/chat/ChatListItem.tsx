@@ -1,6 +1,6 @@
 import type { chatType } from "@/@Types/chat.type"
 import { formatChatTime, getOtherUserAndGroup } from "@/lib/helper"
-import { cn } from "@/lib/utils"
+import { cn } from "../../lib/utils"
 import { useLocation } from "react-router-dom"
 import AvatarWithBatch from "../avatarWithBatch"
 

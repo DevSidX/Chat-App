@@ -3,7 +3,7 @@
 import { create } from 'zustand'
 import { persist } from "zustand/middleware"
 import type { LoginType, RegisterType, UserType } from '@/@Types/auth.type'
-import { API } from '@/lib/axiosClient'
+import { API } from '../lib/axiosClient'
 import { toast } from 'sonner'
 import { useSocket } from './useSocket'
 

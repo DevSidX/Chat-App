@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import logoSvg from "../../assets/TalkioLogo.svg"
-import { cn } from "@/lib/utils"
+import { cn } from "../../lib/utils"
 
 interface LogoProps {
     url?: string
