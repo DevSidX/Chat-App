@@ -12,7 +12,7 @@ interface Props {
   replyTo: MessageType | null
 }
 
-const ChatBody = ({ chatId, messages, onReply, replyTo }: Props) => {
+const ChatBody = ({ chatId, messages, onReply }: Props) => {
   const { socket } = useSocket()
   const { addNewMessage, addOrAutoUpdateMessage } = useChat()
   const bottomRef = useRef<HTMLDivElement | null>(null)

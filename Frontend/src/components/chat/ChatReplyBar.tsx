@@ -1,6 +1,6 @@
 import type { MessageType } from "@/@Types/chat.type"
 import { Button } from "../ui/button"
-import { Ghost, X } from "lucide-react"
+import { X } from "lucide-react"
 
 interface Props {
     replyTo: MessageType | null
