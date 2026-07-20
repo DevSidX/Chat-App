@@ -1,7 +1,7 @@
 import AppWrapper from "@/components/appWrapper"
 import ChatList from "@/components/chat/ChatList"
 import useChatId from "@/hooks/useChatId"
-import { cn } from "@/lib/utils"
+import { cn } from "../lib/utils"
 import { Outlet } from "react-router-dom"
 
 const AppLayout = () => {
